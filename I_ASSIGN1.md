@@ -10,6 +10,7 @@ If you haven't done so already, **install** the `hxtools` package into your Linu
 >
 > Since you must be `root` to install new software, you can use the `sudo` command to run `apt` to install the package like this:
 >
+>     sudo apt update
 >     sudo apt install hxtools
 >
 > You will need one of the programs installed by `hxtools` for this exercise.
@@ -39,6 +40,10 @@ Write a script that does the following:
 > Input: hello world
 > rot13: uryyb jbeyq
 > sha1sum output: 50ed859a45464b63e1a95cba5b30105637ef55d5
+
+> **Important**: Remember to use `chmod u+x` on your script file before running it to make it executable.
+
+> **Important**: Execute your script using `./script_name.sh` (replacing `script_name` with whatever you named your script). Remember that this is because Bash does not look in the current diretcory for executables; you need to explicitly give the path as the current directory (`.`) to make it do so.
 
 ## Requirements
 

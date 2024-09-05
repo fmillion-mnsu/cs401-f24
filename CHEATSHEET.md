@@ -22,6 +22,8 @@ We will develop and expand this document throughout the quarter - consider it yo
   * `rm -r`: Remove a directory *recursively*
 * `mkdir`: Make a directory
 * `rmdir`: Remove an (empty) directory
+* `chown`: Change the owner of a file or diretory
+* `chmod`: Change the mode (permissions) of a file or directory
 
 ### Getting system information
 
