@@ -6,6 +6,8 @@ If you're using VMware, you can actually try booting your kernel as well. It is 
 
 > Building the kernel is quite processor-intensive. You should work together in a group, but I suggest you determine who has the most powerful machine in your group and use that machine for the process.
 
+> Building on Apple Silicon (ARM processor) is slightly different and I haven't been able to thoroughly test it. To be "safe", assuming you have a group member with a Windows machine, go with that one. If you *only* have Macs on your team...good luck, and I'll try to help out wherever I can if things don't seem to work as documented here!
+
 ## Steps
 
 1. Ensure that you have all of the tools necessary on your Linux installation to build software. On Ubuntu, the following command will install the **toolchain** used for compiling C and C++ applications, including the kernel: `sudo apt install build-essential`
