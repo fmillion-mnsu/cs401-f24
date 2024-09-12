@@ -43,7 +43,7 @@ If you're using VMware, you can actually try booting your kernel as well. It is 
 
    The `-j$(nproc)` parameter adds the `-j` option, followed by the return of the `nproc` command. The `nproc` command simply returns a value indicating the number of CPU cores your system (or virtual machine) has available. (Recall that the `$( )` syntax expands to the value printed by the command inside the parentheses!) The `-j` option specifies to the `make` command how many CPU cores it should use for compilation - this will allow for multi-core compiling, which will be much faster than traditional single-core compilation.
 
-   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 15 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!!
+   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 30 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!!
 
 9. If all went well, the compiled kernel will be located at:
     * Intel: `arch/x86_64/boot/Image`
@@ -89,3 +89,28 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     If you successfully built your newly modified kernel, you should see something like this:
 
+6. Copy your *new* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
+
+7. The final step for building most kernels is to build and copy the **modules**.
+
+    Run this command to finish building and copy the module files to your output directory:
+
+    * Intel: `make INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
+    * Apple Silicon: `make ARCH=arm64 INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
+   
+
+8. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
+
+   Name the file `group1-kernel.tar.bz2`.
+
+   For example, after switching into your project directory:
+
+    `tar -c -j -f group1-kernel.tar.bz2 .`
+
+    > The `.` indicates to compress the current directory. `tar` will indicate a warning that it can't compress the file it's currently writing the archive to - that is OK.
+
+    Finally, submit this file on D2L. 
+
+    > If you are having trouble sending the file on D2L because of its size, you may also place the file in your OneDrive and create a Share link that gives me access to download it. You can post that OneDrive link as your submission on D2L. If you need help on this please contact me.
+
+Good luck!
