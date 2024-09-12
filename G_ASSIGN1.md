@@ -43,7 +43,7 @@ If you're using VMware, you can actually try booting your kernel as well. It is 
 
    The `-j$(nproc)` parameter adds the `-j` option, followed by the return of the `nproc` command. The `nproc` command simply returns a value indicating the number of CPU cores your system (or virtual machine) has available. (Recall that the `$( )` syntax expands to the value printed by the command inside the parentheses!) The `-j` option specifies to the `make` command how many CPU cores it should use for compilation - this will allow for multi-core compiling, which will be much faster than traditional single-core compilation.
 
-   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 30 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!!
+   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 30 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!! As long as you still see filenames scrolling and no error, your kernel build is still proceeding. You may want to take a break while it builds!
 
 9. If all went well, the compiled kernel will be located at:
     * Intel: `arch/x86_64/boot/Image`
