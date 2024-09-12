@@ -59,7 +59,7 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
    >
    > Building the kernel *does* build the modules, so the build still takes quite some time.
 
-1.  Now, we're going to make a modification to the kernel.
+10. Now, we're going to make a modification to the kernel.
   
     Run `make nconfig`.
 
@@ -73,15 +73,15 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     > Custom kernels, such as those modified by device manufacturers, will likely have additional options that aren't available in this **mainline** kernel. Additionally, kernel patches are often made available to add hardware support for devices that aren't included in the kernel itself; those patches will usually add options to this configuration interface for building the feature into the kernel.
 
-2.  Under `General Setup`, arrow down to `Local version` and press Enter.
+11. Under `General Setup`, arrow down to `Local version` and press Enter.
 
-    In the box that appears, **add a hyphen, followed by each of your group member's names separated by hyphens**. For example `-flint-rushit-mansi-ryne`.
+    In the box that appears, **add a hyphen, followed by each of your group member's first names separated by hyphens**. For example `-flint-rushit-mansi-ryne`.
 
     You should see the text you entered appear in the menu entry.
 
-3.  Exit the configuration interface.
+12. Exit the configuration interface.
 
-4.  Build your new kernel again using the command in step 8.
+13. Build your new kernel again using the command in step 8.
    
     Since we already built the kernel before, the rebuild will be much faster!
 
@@ -93,19 +93,18 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     If you see your group member's names in there, you've successfully built a *custom* kernel!
 
-5. Copy your *custom* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
+14. Copy your *custom* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
 
    > If you renamed the first kernel image file from `Image` to `Image1`, copying the new `Image` file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
 
-6. The final step for building most kernels is to build and copy the **modules**.
+15. The final step for building most kernels is to build and copy the **modules**.
 
     Run this command to finish building and copy the module files to your output directory:
 
     * Intel: `make INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
     * Apple Silicon: `make ARCH=arm64 INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
    
-
-8. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
+16. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
 
    Name the file `group1-kernel.tar.bz2`.
 
@@ -115,7 +114,7 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     > The `.` indicates to compress the current directory. `tar` will indicate a warning that it can't compress the file it's currently writing the archive to - that is OK.
 
-    Finally, submit this file on D2L. 
+    Finally, submit this file on D2L.
 
     > If you are having trouble sending the file on D2L because of its size, you may also place the file in your OneDrive and create a Share link that gives me access to download it. You can post that OneDrive link as your submission on D2L. If you need help on this please contact me.
 
