@@ -36,24 +36,24 @@ If you're using VMware, you can actually try booting your kernel as well. It is 
 
 8. Finally, build the kernel!
 
-   * On Intel PC (VMware or WSL): `make -j$(nproc)`
-   * On Apple Silicon Mac: `make ARCH=arm64 -j$(nproc) Image`
+   * On Intel PC (VMware or WSL): `make -j$(nproc) bzImage`
+   * On Apple Silicon Mac: `make ARCH=arm64 -j$(nproc) Image.gz`
 
    This command creates a `bzip2` compressed kernel executable image. 
 
    The `-j$(nproc)` parameter adds the `-j` option, followed by the return of the `nproc` command. The `nproc` command simply returns a value indicating the number of CPU cores your system (or virtual machine) has available. (Recall that the `$( )` syntax expands to the value printed by the command inside the parentheses!) The `-j` option specifies to the `make` command how many CPU cores it should use for compilation - this will allow for multi-core compiling, which will be much faster than traditional single-core compilation.
 
-   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 30 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!! As long as you still see filenames scrolling and no error, your kernel build is still proceeding. You may want to take a break while it builds!
+   Note that building the kernel can take some time. On a decently powerful laptop, it will probably take at least 15 minutes. During the compile, you'll see the name of each source code file that is being built scrolling up your screen. Your PC is very busy while this is happening!! As long as you still see filenames scrolling and no error, your kernel build is still proceeding. You may want to take a break while it builds!
 
 9. If all went well, the compiled kernel will be located at:
-    * Intel: `arch/x86_64/boot/Image`
-    * Apple Silicon: `arch/arm64/boot/Image`
+    * Intel: `arch/x86_64/boot/bzImage`
+    * Apple Silicon: `arch/arm64/boot/Image.gz`
 
-You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory and see if the `Image` file was created.
+You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory and see if the `bzImage` or `Image.gz` file was created.
 
    If so, congratulations - you built a kernel!
 
-   Create a project directory, such as in your home directory (e.g. `/home/your_username/assignment1`). **Copy** the `Image` file out of the above path into the directory you created. After copying, rename the `Image` file to `Image1`. I leave it as an exercise to you to create a directory and copy and rename the `Image` file there.
+   Create a project directory, such as in your home directory (e.g. `/home/your_username/assignment1`). **Copy** the `bzImage` or `Image.gz` file out of the above path into the directory you created. After copying, rename the file to `Image1`. I leave it as an exercise to you to create a directory and copy and rename the image file there.
 
    > Note that the kernel actually doesn't contain many drivers internally. Most modern Linux setups use **loadable modules** for drivers, which are essentially pieces of code that can be injected into the kernel at runtime.
    >
@@ -85,26 +85,28 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
    
     Since we already built the kernel before, the rebuild will be much faster!
 
-    You can verify if your kernel built successfully with this command: `file arch/x86_64/boot/Image` or `file arch/arm64/boot/Image`
+    You can verify if your kernel built successfully with this command: `file arch/x86_64/boot/bzImage` or `file arch/arm64/boot/Image.gz`
 
     If you successfully built your newly modified kernel, you should see something like this:
 
-    `arch/x86_64/boot/Image: Linux kernel x86 boot executable bzImage, version 6.10.0-flint-rushit-mansi-ryne (root@localhost) #1 ...`
+    `arch/x86_64/boot/bzImage: Linux kernel x86 boot executable bzImage, version 6.10.0-flint-rushit-mansi-ryne (root@localhost) #1 ...`
 
     If you see your group member's names in there, you've successfully built a *custom* kernel!
 
 14. Copy your *custom* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
 
-    > If you renamed the first kernel image file from `Image` to `Image1`, copying the new `Image` file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
+    > If you renamed the first kernel image file to `Image1`, copying the new image file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
 
 15. The final step for building most kernels is to build and copy the **modules**.
 
-    Run this command to finish building and copy the module files to your output directory:
+    First run `make -j$(nproc) modules` to build the modules themselves. This is another step that will take some time - possibly more than the initial kernel build! Take a break and play some DnD or Minecraft `:)`.
+
+16. Run this command to finish building and copy the module files to your output directory:
 
     * Intel: `make INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
     * Apple Silicon: `make ARCH=arm64 INSTALL_MOD_PATH=/home/<...path to your project dir...>/modules modules_install`
    
-16. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
+17. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
 
     Name the file `group1-kernel.tar.bz2`.
 
