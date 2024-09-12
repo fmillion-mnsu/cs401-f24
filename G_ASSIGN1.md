@@ -95,7 +95,7 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
 14. Copy your *custom* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
 
-   > If you renamed the first kernel image file from `Image` to `Image1`, copying the new `Image` file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
+    > If you renamed the first kernel image file from `Image` to `Image1`, copying the new `Image` file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
 
 15. The final step for building most kernels is to build and copy the **modules**.
 
@@ -106,9 +106,9 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
    
 16. To submit your assignment, switch into your project directory and use the `tar` command to make an **archive** of the directory. Use the `-j` command line option to use bzip2 compression. 
 
-   Name the file `group1-kernel.tar.bz2`.
+    Name the file `group1-kernel.tar.bz2`.
 
-   For example, after switching into your project directory:
+    For example, after switching into your project directory:
 
     `tar -c -j -f group1-kernel.tar.bz2 .`
 
