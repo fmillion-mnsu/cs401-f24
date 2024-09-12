@@ -32,6 +32,27 @@ We will develop and expand this document throughout the quarter - consider it yo
 * `df`: Show disk usage and free space
 * `lsblk`: List all **block devices** in the system
 
+## Compressed Files
+
+* Create a `.tar` archive of one or more files and/or directories using `tar`: `tar -c -f <output_file.tar> <file/dir> [<file/dir> ...]`
+* Same as above, but compress the files using `gzip`:
+  * `tar -c -z -f <output_file.tar.gz> <file/dir> [<file/dir> ...]`
+  * Or using a pipe and redirection: `tar -c -f - <file/dir> [<file/dir> ...] | gzip - > output_file.tar.gz`
+* Same as above, but compress using `xz` - very good compression, but slower for very large files: `tar -c -f - <file/dir> [<file/dir> ...] | xz -c - > output_file.tar.xz`
+* Extract the contents of a `.tar` file (most modern `tar` versions will detect compressed tarfiles automatically): `tar -x -f <tarfile.tar>`
+* Extract the contents of a compressed `.tar` file using a pipe, in case `tar` doesn't auto-detect the compression:
+  * gzip: `gzip -d -c <tarfile.tar.gz> | tar -x -f -`
+  * bzip2: `bzip2 -d -c <tarfile.tar.bz2> | tar -x -f -`
+  * xz: `xz -d -c <tarfile.tar.xz> | tar -x -f -`
+* Show a **list** of files in a `.tar` archive without actually extracting them: replace `-x` with `-t` on any command that extracts a tarfile
+
+### Switches for `tar`
+
+Add these to the `tar` command prior to the `-f` option to affect `tar`'s operation as follows:
+
+* `-v`: Display all filenames when compressing or decompressing on standard error. Compatible with pipes.
+* `-C <dir>`: Change directory to `<dir>` before compressing or decompressing. Helpful when compressing files to ensure the path stored in the `tar` file is correct
+
 ## `nano` Editor
 
 * `Ctrl+X`: exit Nano. It will ask you to save the file if it has been changed.
