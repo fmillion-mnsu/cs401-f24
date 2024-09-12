@@ -53,13 +53,13 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
    If so, congratulations - you built a kernel!
 
-   **Copy** the `Image` file out of the above path, and store it somewhere. Also, rename it to `kernel1`. I leave it as an exercise to you to create a directory and copy and rename the `Image` file there.
+   Create a project directory, such as in your home directory (e.g. `/home/your_username/assignment1`). **Copy** the `Image` file out of the above path into the directory you created. After copying, rename the `Image` file to `Image1`. I leave it as an exercise to you to create a directory and copy and rename the `Image` file there.
 
    > Note that the kernel actually doesn't contain many drivers internally. Most modern Linux setups use **loadable modules** for drivers, which are essentially pieces of code that can be injected into the kernel at runtime.
    >
    > Building the kernel *does* build the modules, so the build still takes quite some time.
 
-10. Now, we're going to make a modification to the kernel.
+1.  Now, we're going to make a modification to the kernel.
   
     Run `make nconfig`.
 
@@ -73,15 +73,15 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     > Custom kernels, such as those modified by device manufacturers, will likely have additional options that aren't available in this **mainline** kernel. Additionally, kernel patches are often made available to add hardware support for devices that aren't included in the kernel itself; those patches will usually add options to this configuration interface for building the feature into the kernel.
 
-3.  Under `General Setup`, arrow down to `Local version` and press Enter.
+2.  Under `General Setup`, arrow down to `Local version` and press Enter.
 
     In the box that appears, **add a hyphen, followed by each of your group member's names separated by hyphens**. For example `-flint-rushit-mansi-ryne`.
 
     You should see the text you entered appear in the menu entry.
 
-4.  Exit the configuration interface.
+3.  Exit the configuration interface.
 
-5.  Build your new kernel again using the command in step 8.
+4.  Build your new kernel again using the command in step 8.
    
     Since we already built the kernel before, the rebuild will be much faster!
 
@@ -89,9 +89,15 @@ You can do `ls arch/x86_64/boot` or `ls arch/arm64/boot` to list the directory a
 
     If you successfully built your newly modified kernel, you should see something like this:
 
-6. Copy your *new* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
+    `arch/x86_64/boot/Image: Linux kernel x86 boot executable bzImage, version 6.10.0-flint-rushit-mansi-ryne (root@localhost) #1 ...`
 
-7. The final step for building most kernels is to build and copy the **modules**.
+    If you see your group member's names in there, you've successfully built a *custom* kernel!
+
+5. Copy your *custom* kernel to the directory you created in step 9, and **rename** the image file to `Image2`.
+
+   > If you renamed the first kernel image file from `Image` to `Image1`, copying the new `Image` file into your output directory won't overwrite the original build. However, if you did *not* rename the file first, copying the new image will *overwrite* the original. Your submission must contain *both* kernel images!
+
+6. The final step for building most kernels is to build and copy the **modules**.
 
     Run this command to finish building and copy the module files to your output directory:
 
