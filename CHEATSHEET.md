@@ -374,15 +374,15 @@ It can be used in a while loop, as it returns a nonzero value when there are no 
 
 Example Syntax: 
 
-    while getopts “vy” opt; do
+    while getopts "vy" opt; do
       case $opt in
-        v) echo “Verbose mode selected.” ;;
-        y) echo “No confirmation selected.” ;;
-        \?) echo “unknown option $opt”; exit 1 ;;
+        v) echo "Verbose mode selected." ;;
+        y) echo "No confirmation selected." ;;
+        \?) echo "unknown option $opt"; exit 1 ;;
       esac
     done
 
-To accept a parameter for an option, add a `:` after that character in the list. For example: `while getopts “vf:” opt; do ...` When you do this, the parameter will be available in the variable `OPTARG`.
+To accept a parameter for an option, add a `:` after that character in the list. For example: `while getopts "vf:" opt; do ...` When you do this, the parameter will be available in the variable `OPTARG`.
 
 This command shifts off all parsed command line arguments, leaving the positional variables pointing to only those parameters not part of command line switches: `shift $((OPTIND - 1))`
 
