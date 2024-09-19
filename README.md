@@ -11,3 +11,4 @@
 * Getting a Linux installation:
   * Windows users: choose from either [Windows Subsystem for Linux](WSL.md) or [VMware Workstation](VMWARE.md).
   * Mac users: install [VMware Fusion](VMWARE.md).
+* Installing and using [Visual Studio Code](VSCODE.md) on Linux for script editing
