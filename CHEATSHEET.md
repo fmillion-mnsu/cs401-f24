@@ -71,6 +71,11 @@ Add these to the `tar` command prior to the `-f` option to affect `tar`'s operat
 * Write the output of the final command to a file, appending to the file if it exists: `>>`
 * Send the contents of a file to standard input of the first command in a chain: `<`
 
+#### Examples for Pipes
+
+* "Page" the output of a command so that it can be viewed page by page rather than scrolling the buffer: `[your command] | less`
+  * `less` is a "pager" which stores all of the incoming data and presents it to you in a navigable form. In `less`, you can use the space bar to advance a page and the `b` key to back up a page. Press `q` to quit, or `h` for a help screen with several other options.
+
 #### Advanced: Process Substitution
 
 Process substitution lets you treat the output of a command as if it were a file being provided to another application.
