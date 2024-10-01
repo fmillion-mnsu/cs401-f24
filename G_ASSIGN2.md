@@ -37,9 +37,11 @@ You do *not* need to follow this output format exactly, but it should be roughly
         sda: 128 GB
         sdb: 4004 GB
         sdc: 4004 GB
+    Total filesystems: 14
     Root filesystem: /dev/sda2
     Processes: 195
     Kernel version: 6.6.44-0-lts
+    Kernel command line: BOOT_IMAGE=/vmlinuz-lts root=/dev/sda ro modules=sd-mod,usb-storage
     Uptime: 21 hours 19 minutes 33 seconds
 
 Of course, your actual output will differ significantly.
