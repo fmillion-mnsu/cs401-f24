@@ -64,12 +64,25 @@ Add these to the `tar` command prior to the `-f` option to affect `tar`'s operat
 
 ## Bash Scripting
 
-### Piping
+### Piping and Redirection
 
 * Take output of one command and send it to input of next command: `|` (shift+backslash) Also known as the pipe character or "vertical bar"
 * Write the output of the final command in a chain to a file, **overwriting** the file if it exists: `>`
 * Write the output of the final command to a file, appending to the file if it exists: `>>`
 * Send the contents of a file to standard input of the first command in a chain: `<`
+
+#### Examples for Pipes
+
+* "Page" the output of a command so that it can be viewed page by page rather than scrolling the buffer: `[your command] | less`
+  * `less` is a "pager" which stores all of the incoming data and presents it to you in a navigable form. In `less`, you can use the space bar to advance a page and the `b` key to back up a page. Press `q` to quit, or `h` for a help screen with several other options.
+
+#### Advanced: Process Substitution
+
+Process substitution lets you treat the output of a command as if it were a file being provided to another application.
+
+Syntax: `<(command)`
+
+Example - compare directory listings of two directories: `diff <(ls dir1) <(ls dir2)`
 
 ### Variables and Expansions
 
@@ -86,6 +99,44 @@ Add these to the `tar` command prior to the `-f` option to affect `tar`'s operat
 
 > Expansions can be used anywhere within bare strings or within double-quoted strings. For example, you could assign a string containing the current directory to a variable in one go with: `MSG="The current directory is $(pwd)."`
 
+#### Sequences
+
+* Generate a sequence of numbers or characters: `{START..END}`
+  * Example: `{1..10}` generates the numbers between 1 and 10 inclusive.
+  * Example: `{a..z}` generates all of the letters of the alphabet in lowercase.
+  * Example: `{001..010}` returns the numbers between 1 and 10 inclusive, padded with zeroes to be three digits long
+  * Sequences can be done in reverse by putting a larger value in `START` and a smaller one in `END` - example: `{5..3}` returns `5 4 3`.
+* Generate a sequence with a specific **step** (skip every *step* value): `{START..END..STEP}`
+  * Example: `{1..10..2}` returns `1 3 5 7 9`
+
+> If you include other static characters in the same **token** as the sequence expansion, those characters will be included in each iteration of the sequence.
+>
+> For example: `dir{1..5}` returns `dir1 dir2 dir3 dir4 dir5`
+
+> You can combine multiple expansions; they will be combined in a many-to-many fashion.
+>
+> For example: `{1..3}{a..c}` returns `1a 1b 1c 2a 2b 2c 3a 3b 3c`
+
+#### String manipulation
+
+* Get a substring of a string:
+  * One or more characters starting at a given position: `${VARIABLE:INDEX:NUM_CHARS}`
+  * From a character to the end of the string: `${VARIABLE:INDEX}`
+  * From a character counting from the end of the string backwards: `${VARIABLE: -INDEX}`
+* Search and replace:
+  * Replace the **first** occurrence of a string in a variable with another string: `${VARIABLE/SEARCH/REPLACE}`
+    * Example: `${VARIABLE/Hello/Goodbye}`
+  * Replace **all** occurrences of a string in a variable with another string: `${VARIABLE//SEARCH/REPLACE}`
+* Remove start/end strings from a string:
+  * Remove a given string or wildcard matched string from the end of a string:
+    * Lazy (remove as little as possible): `${VARIABLE%REMOVE_STRING}` - example: `${FILENAME%.jpg}` removes `.jpg` from the end of a filename if it ends with `.jpg`
+    * Eager (remove as much as possible): `${VARIABLE%%REMOVE_STRING}`
+  * Remove a given string or wildcard matched string from the beginning of a string:
+    * Lazy (remove as little as possible): `${VARIABLE#REMOVE_STRING}` - example: `${PATH#/}` to remove leading slashes from a path
+    * Eager (remove as much as possible): `${VARIABLE##REMOVE_STRING}`
+* Return the value of a variable, or a default string if the variable is empty: `${VARIABLE:-DEFAULT}`
+* Return a specific static value if a variable is not empty, otherwise return an empty string: `${VARIABLE:+STATIC_VALUE}`
+
 #### Internal variables
 
 These variables are defined by Bash and are available in scripts:
@@ -96,6 +147,19 @@ These variables are defined by Bash and are available in scripts:
 * `$@`: Contains all parameters in an iterable string, split by space (or by `$IFS`)
 * `$?`: Contains an integer representing the return value of the last executed command
 * `$IFS`: Contains the character used to split the parameters to functions. Defaults to a space. Can be set to change the separator prior to e.g. calling a function
+* `$RANDOM`: Always returns a random number between 0 and 32767.
+
+#### Arrays
+
+* Defina an array from static values: `ARRAY_VARIABLE=("val1" "val2" ...)`
+  * Python equivalent: `array_variable=["val1","val2",...]`
+* Get the number of items in an array: `${#ARRAY_VARIABLE[@]}`
+  * Python equivalent: `str(len(array_variable))`
+* Get one element from an array: `${ARRAY_VARIABLE[INDEX]}`
+* Replace the value of an array element in-place: `${ARRAY_VARIABLE[INDEX]}=NEW_VALUE`
+* Delete an item from the array by index: `unset ${ARRAY_VARIABLE[INDEX]}`
+  * Python equivalent: `del array_variable[index]`
+* Get the entire contents of an array for iterating, such as in a `for` loop: `${ARRAY_VARIABLE[@]}`
 
 ### Conditionals
 
@@ -145,6 +209,66 @@ For these examples, `$VAR1` and `$VAR2` represent arbitrary variables - replace 
       echo "$BOTTLES bottles of water in the fridge."
       echo
     done
+
+### Control flow
+
+#### `if` statement
+
+Syntax: 
+
+    if CONDITION; then
+      STATEMENTS
+    fi
+
+See the [Conditionals](#conditionals) section for conditions you can use in an `if` statement. 
+
+> Remember that in `bash`, a value of `0` is a **truthy** value.
+
+#### `for` loop
+
+Syntax:
+
+    for ITERATION_VARIABLE in SEQUENCE; do
+      STATEMENTS
+    done
+
+The `SEQUENCE` can be any of these:
+
+* an array
+* a sequence generated using `{..}` syntax
+* a space-separated list of static values
+
+#### `while` loop
+
+Syntax:
+
+    while CONDITION; do
+      STATEMENTS
+    done
+
+#### `case` block
+
+Similar to `switch` in other languages.
+
+Syntax:
+
+    case "$VALUE" in
+      value)
+        STATEMENTS
+        ;;
+      another_value)
+        STATEMENTS
+        ;;
+      *)
+        DEFAULT_STATEMENTS
+        ;;
+    esac
+
+The cases can be static values or wildcard expansions. Using `*` as a case is effectively equivalent to a `default` case in other languages.
+
+Cases are evaluated in the order listed. The first case to match is the one executed. (This means that if `*)` is your first case, it is the only case that will ever be executed!)
+
+> You can use `|` to do a logical OR - to match on multiple values. For example: `*.wav | *.flac)`
 
 ### Functions
 
@@ -215,3 +339,55 @@ Example:
     }
 
     function_that_might_fail || error_handler
+
+### Aliases
+
+Aliases are simple 1:1 expansions. They are useful for making commands faster to type and for providing default options to a command.
+
+* To set an alias: `alias CMD=VALUE`
+  * example: `alias gita="git add -A"`
+* To list currently defined aliases: `alias`
+* To unset an alias: `unalias CMD`
+
+### Importing other scripts
+
+The `source` command (Bash specific) or the `.` command (generic) will load and execute another script in the *same* shell.
+
+> Directly executing a script with e.g. `./script.sh` will launch a *new* shell for that script; anything defined in the current shell won't be passed forward, nor will anything created in the new shell be available to the shell you executed from.
+
+A common use for `source` is to create a separate script file with only functions defined. You can then `source` that file to get access to its functions in any other script.
+
+### "Here" Documents
+
+Similar to triple-quoted multi-line strings in Python.
+
+Syntax: 
+
+    <<DELIMITER
+    string
+    string
+    ...
+    DELIMITER
+
+`DELIMITER` can be any string without spaces. Commonly used is `EOF`.
+
+### Parsing command-line options
+
+The `getopts` command creates an interation over the parameters given on the script's invocation. Each time it is run, it returns one option. 
+
+It can be used in a while loop, as it returns a nonzero value when there are no more arguments to return, to iterate over all options provided.
+
+Example Syntax: 
+
+    while getopts "vy" opt; do
+      case $opt in
+        v) echo "Verbose mode selected." ;;
+        y) echo "No confirmation selected." ;;
+        \?) echo "unknown option $opt"; exit 1 ;;
+      esac
+    done
+
+To accept a parameter for an option, add a `:` after that character in the list. For example: `while getopts "vf:" opt; do ...` When you do this, the parameter will be available in the variable `OPTARG`.
+
+This command shifts off all parsed command line arguments, leaving the positional variables pointing to only those parameters not part of command line switches: `shift $((OPTIND - 1))`
+
