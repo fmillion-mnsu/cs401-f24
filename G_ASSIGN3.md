@@ -85,9 +85,3 @@ Your deliverable is simply your `Dockerfile` and accompanying `.sh` script files
 This is a **group** project - only **one** submission per group is required.
 
 The due date for this assignment is **Wednesday, October 23** at **11:59 PM**.
-
-## Resources
-
-This assignment only scratches the surface of the breadth of information available via simple interfaces such as the files in `/proc` and `/sys`. You can install the package `lshw` if you want to try a very comprehensive system information tool that extracts a large amount of information via these interfaces. 
-
-Also note that nearly every other tool that presents information about your system is using these interfaces to obtain that information. Commands such as `free`, `top`/`htop`, `uptime`, `uname` and so on are all simply accessing the data provided by these virtual files!
