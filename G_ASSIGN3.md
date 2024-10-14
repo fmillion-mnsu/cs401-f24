@@ -44,7 +44,8 @@ Your `entrypoint.sh` script should be written in Bash and must accomplish the fo
 * **Check whether the user has mounted persistent storage on `/data`.** There's a few ways you can do this, but one idea is to add a step in your Dockerfile that creates an empty file in `/data`, and then your entrypoint script checks whether that file exists. If the user did mount storage on `/data`, the file you created should *not* be present.
 * **Change the ownership of `/data` and all files within it to the user you created for running the application.** The `chown` command is the one you're looking for to do this. Look at the manual page or research how to have the command be recursive.
 * **Create the database file in `/data`, but ONLY if it has not been done before.** The Python file `dbsetup.py` can be run to accomplish this. *However,* you should **not** seed the database if it already exists! You need to devise and implement a solution for checking whether the database has been seeded each time the entrypoint runs, and skip the process if it's already done.
-* **Use `exec` to start the `app.py` program.** This should be the last step in your entrypoint script. Remember that this should happen all the time, regardless of whether the database setup steps were needed or not!
+* **Use `exec` along with `sudo` to start the `app.py` program as the user you created in the Dockerfile.** This should be the last step in your entrypoint script. Remember that this should happen all the time, regardless of whether the database setup steps were needed or not!
+  * Refer to the [cheatsheet's Security section](CHEATSHEET.md#security) for help!
 
 ### Healthcheck script
 

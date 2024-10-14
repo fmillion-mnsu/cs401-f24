@@ -25,6 +25,12 @@ We will develop and expand this document throughout the quarter - consider it yo
 * `chown`: Change the owner of a file or diretory
 * `chmod`: Change the mode (permissions) of a file or directory
 
+### Security
+
+* `id`: Show your current user ID, group IDs, etc.
+* `sudo`: Run a command as the root or another user.
+  * Use `sudo -u <user> <command>` to run a command as a specific user. Omit the `-u <user>` to run as root.
+
 ### Getting system information
 
 * `lscpu`: Show information about your CPU
