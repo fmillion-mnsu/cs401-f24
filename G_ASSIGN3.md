@@ -12,12 +12,13 @@ The application provided is a simple Web server. The server has the following en
 * `/cpu.json`: Returns information about the system CPU in a JSON format.
 * `/cpu`: Return a formatted web page with information about the system CPU.
 * `/check`: If the server is running, returns `OK`. *Use this for your healthcheck script as per the instructions below.*
+* `/log`: Get a list of all logged accesses to the API, in JSON format.
 
 ## Requirements
 
 Prepare a Dockerfile, Entrypoint and HealthCheck script for the application in this repository located under the directory `Assignment3`. The application is a simple Python application that implements a simple Flask-based website. 
 
-Within the `Assignment3` folder, you will see the file `app.py`, which is the application, and a `requirements.txt` file.
+Within the `Assignment3` folder, you will see the file `app.py`, which is the application; the file `dbsetup.py` which is the database setup script, and a `requirements.txt` file.
 
 > If you aren't familiar, a `requirements.txt` file is used by Python's `pip` package manager to specify what libraries are required by a Python application. You'll use it during the build process.
 
