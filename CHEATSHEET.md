@@ -25,6 +25,12 @@ We will develop and expand this document throughout the quarter - consider it yo
 * `chown`: Change the owner of a file or diretory
 * `chmod`: Change the mode (permissions) of a file or directory
 
+### Security
+
+* `id`: Show your current user ID, group IDs, etc.
+* `sudo`: Run a command as the root or another user.
+  * Use `sudo -u <user> <command>` to run a command as a specific user. Omit the `-u <user>` to run as root.
+
 ### Getting system information
 
 * `lscpu`: Show information about your CPU
@@ -391,3 +397,41 @@ To accept a parameter for an option, add a `:` after that character in the list.
 
 This command shifts off all parsed command line arguments, leaving the positional variables pointing to only those parameters not part of command line switches: `shift $((OPTIND - 1))`
 
+## Docker
+
+Docker is a popular implementation of *containers*.
+
+* **Run a container**: `docker run <parameters> <image_name> <arguments>`
+  * `<parameters>` is one or more options. See below.
+  * `<image_name>` is the name of a Docker image. If you have built an image, it is the name you provided after `-t` on `docker build`. Otherwise, Docker will try to download the specified image by name from Docker Hub, or if a full URL is provided, the server at the given URL.
+  * `<arguments>` is optional. Arguments given here are passed to the entrypoint of the container as command line arguments.
+* **View list of containers**: `docker ps`
+  * View *all* containers, even stopped ones: `docker ps -a`
+* **Stop a container by name**: `docker stop <container>`
+* **Restart a container by name**: `docker restart <container>`
+* **Remove a container by name, assuming it is stopped**: `docker rm <container>`
+* **Show messages from a container**: `docker logs <container>`
+  * If you use `docker logs -f <container>`, the process will not exit and will instead continue to print ongoing messages from the application. Press Ctrl+C to exit the log viewing session; the container will be unaffected.
+* **Build a Docker container**: `docker build -t <image_name> <path>`
+  * `<image_name>` will be assigned to the built container image. You can use this as the `<image_name>` parameter in `docker run`.
+  * `<path>`: The path containing the Dockerfile along with any supporting files. Using `.` is common if you are currently in the directory containing the project.
+  * You can add the `--no-cache` option prior to the path if you want to instruct Docker *not* to use any cached layers, even if it would be otherwise possible.
+
+### Docker Run parameters
+
+* `--name`: Provide your own name for the container, for use in `docker stop`, `docker rm`, etc. If you do not provide this parameter, Docker selects a random container name by concatenating an adjective with the name of a famous scientist.
+  * Docker container names must consist of only lowercase alphanumeric characters, numbers, underscore (`_`), and hyphen (`-`).
+* `-d`: Run the container in the background and return to the prompt immediately.
+* `-it`: Run the container in the foreground, **i**nteractively. 
+  * In this mode, if you press Ctrl+C to stop the application, the container will exit.
+  * For Assignment 3, you should not need to run the container in the foreground.
+* `-p <host_port>:<container_port>`: Forward a host network port to a port within the container. 
+  * For example, if a service is running in the container on port 3000, but you want that service available on your system at port 1000, you would issue the parameter `-p 1000:3000`.
+  * `-p` can be given multiple times to forward multiple ports.
+* `-v` <host_path>:<container_path>`: Map a host directory or file into the container at a given path.
+  * For example, if you wish the path `/home/user/data` to be available within the container at `/data`, you would issue the parameter `-v /home/user/data:/data`.
+  * If any of your directory names contain spaces, you should enclose the entire path specification in double quotes. For example: `-v "/home/user/Project Files/data:/data"`
+  * If you append `:ro` to the end of the container path, the container will be unable to write any changes to the mapped directory.
+  * You can also map a single specific *file* into the container. For example: `-v /home/user/project/config.json:/app/config.json:ro`
+  * A tip: Use Bash's `$()` expansion to allow mapping a *relative* path from the current directory. For example, if you are in `/home/user/project` and you want to map `./data` into `/data`, you would use `-v "$(pwd)/data:/data"`.
+* `--entrypoint <script_or_program>`: Override the entrypoint script specified when the image was built. This might be useful to debug a container by executing `/bin/bash` as the entrypoint and then exploring the container from inside.
