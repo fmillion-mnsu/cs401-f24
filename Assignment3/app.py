@@ -86,6 +86,8 @@ def get_cpu_info():
 class HelloWorldView(MethodView):
     def get(self):
 
+        log("/")
+
         global API_IS_ACTIVE
         if not API_IS_ACTIVE:
             return Response(status=500)
@@ -94,12 +96,16 @@ class HelloWorldView(MethodView):
 
 class EnableAPIView(MethodView):
     def get(self):
+        log("/enable")
+
         global API_IS_ACTIVE
         API_IS_ACTIVE = True
         return Response(json.dumps({"state":True}), content_type='application/json')
 
 class DisableAPIView(MethodView):
     def get(self):
+
+        log("/disable")
 
         global API_IS_ACTIVE
         if not API_IS_ACTIVE:
@@ -111,6 +117,8 @@ class DisableAPIView(MethodView):
 class CheckView(MethodView):
     def get(self):
 
+        log("/check")
+
         global API_IS_ACTIVE
         if not API_IS_ACTIVE:
             return Response(status=500)
@@ -119,13 +127,16 @@ class CheckView(MethodView):
 
 class CPUView(MethodView):
     def get(self):
+
+        log("/cpu")
+
         html_content = '''
         <!doctype html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Dictionary Representation</title>
+            <title>Your CPU</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -180,11 +191,30 @@ class CPUView(MethodView):
 class CPUJsonView(MethodView):
     def get(self):
 
+        log("/cpu.json")
+
         global API_IS_ACTIVE
         if not API_IS_ACTIVE:
             return Response(status=500)
 
         return Response(json.dumps(get_cpu_info()), content_type='application/json')
+
+class LogView(MethodView):
+    def get(self):
+
+        log("/log")
+
+        ctx = sqlite3.connect("/data/log.sqlite3")
+        cur = ctx.cursor()
+
+        cur.execute("SELECT * FROM log")
+        rows = cur.fetchall()
+
+        ctx.commit()
+        cur.close()
+        ctx.close()
+
+        return Response(json.dumps([{"id":row[0],"date":row[1],"endpoint":row[2]} for row in rows]), content_type='application/json')
 
 app.add_url_rule('/', view_func=HelloWorldView.as_view('hello_world'))
 app.add_url_rule('/start', view_func=EnableAPIView.as_view('enable_api'))
@@ -192,17 +222,29 @@ app.add_url_rule('/stop', view_func=DisableAPIView.as_view('disable_api'))
 app.add_url_rule('/check', view_func=CheckView.as_view('check'))
 app.add_url_rule('/cpu', view_func=CPUView.as_view('cpu'))
 app.add_url_rule('/cpu.json', view_func=CPUJsonView.as_view('cpu_json'))
+app.add_url_rule('/log', view_func=LogView.as_view('log'))
 
 if __name__ == '__main__':
-
-    # Check whether the data file /data/log.sqlite3 exists.
-    if not os.path.isfile("/data/log.sqlite3"):
-        print("The database is not initialized!")
-        exit(1)
 
     # Detect if running on Linux; if not, exit with failure
     if platform.system() != 'Linux':
         print("This script is only supported on Linux")
         exit(1)
 
+    # Check whether the data file /data/log.sqlite3 exists.
+    if not os.path.isfile("/data/log.sqlite3"):
+        print("The database is not initialized!")
+        exit(1)
+
+    # Check whether the database was properly initialized.
+    # SQLite3 should report that a "log" table exists.
+    ctx = sqlite3.connect("/data/log.sqlite3")
+    cur = ctx.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='log'")
+    if not cur.fetchone():
+        print("The database is invalid!")
+        exit(1)
+
+    log("*STARTUP*")
+    # Start the app
     app.run(debug=False, host='0.0.0.0', port=5000)
