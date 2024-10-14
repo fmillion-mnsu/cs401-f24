@@ -2,6 +2,8 @@
 
 This is the final assignment for this course! In this assignment you will build a Dockerfile along with an entrypoint and healthcheck script for a simple application. 
 
+> **Hint:** If you haven't worked with Docker, the [Docker section of the Cheatsheet](CHEATSHEET.md#Docker) will be invaluable to your group for this assignment!
+
 ## The Application
 
 The application provided is a simple Web server. The server has the following endpoints:
@@ -42,7 +44,7 @@ Your `entrypoint.sh` script should be written in Bash and must accomplish the fo
 * **Check whether the user has mounted persistent storage on `/data`.** There's a few ways you can do this, but one idea is to add a step in your Dockerfile that creates an empty file in `/data`, and then your entrypoint script checks whether that file exists. If the user did mount storage on `/data`, the file you created should *not* be present.
 * **Change the ownership of `/data` and all files within it to the user you created for running the application.** The `chown` command is the one you're looking for to do this. Look at the manual page or research how to have the command be recursive.
 * **Create the database file in `/data`, but ONLY if it has not been done before.** The Python file `dbsetup.py` can be run to accomplish this. *However,* you should **not** seed the database if it already exists! You need to devise and implement a solution for checking whether the database has been seeded each time the entrypoint runs, and skip the process if it's already done.
-* **Use `exec` to start the `app.py` program.** This should be the last step in your entrypoint script.
+* **Use `exec` to start the `app.py` program.** This should be the last step in your entrypoint script. Remember that this should happen all the time, regardless of whether the database setup steps were needed or not!
 
 ### Healthcheck script
 
@@ -53,6 +55,27 @@ Your `healthcheck.sh` script should do the following:
   * If the URL access fails, or does not contain the string `OK`, the healthcheck should fail. Return an appropraite *failing* return code.
 
 It's up to you to figure out how to check the output of the `curl` command!
+
+## Testing
+
+To test your container:
+
+* Build the container image using `docker build -t <some_container_name> .`. (Obviously, replace `<some_container_name>` with your own name!)
+* Try to **run** your container using an appropriate `docker run` command. 
+  * `-p` is the option to forward a port - the application listens on port 5000 from inside the container, so forward this port to some port on your host system.
+  * `-v` is the option to map a directory on your host filesystem into the container at a given path. For example, `-v /host/data/path:/data` makes the directory `/host/data/path` appear at the path `/data` within the container.
+
+    > Hint: You can use the `pwd` shell command to get the current directory. Combining this with `$()` expansion lets you specify a directory relative to the current directory like this: `"$(pwd)/some/local/path:/data`.
+* Test that the container is working by visiting `http://localhost:<port>` in a web browser. `<port>` is the port you chose to forward the container's port 5000 to.
+* Use the `curl` command to access the home page using the command `curl http://localhost:<port>`.
+
+    > Hint: Use `apt` to install `curl` if the command is not found.
+
+* Also check that the renderer is working by viewing `http://localhost:<port>/cpu` in your browser.
+* Disable the API by calling `curl http://localhost:<port>/stop`. The API will still be running, but if you implemented your healthcheck properly, the healthcheck should now be *failing*. (You'll need to wait for the interval you set on the healthcheck - default 30 seconds - before you see the container failing.)
+  * `docker ps` shows the list of running containers as per the [cheatsheet](CHEATSHEET.md#Docker).
+* Re-enable the API by running `curl http://localhost:<port>/start`. See if the healthcheck changes back to successful - if it doesn't do so, that's still OK! Restart the container.
+* Finally, make sure logging has been working by looking at `curl http://localhost:<port>/log`.
 
 ## Deliverable
 
